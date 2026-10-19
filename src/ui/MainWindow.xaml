@@ -1,0 +1,91 @@
+<Window x:Class="AsLab.Ui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="clr-namespace:AsLab.Ui"
+        xmlns:vd="clr-namespace:AsLab.Views.Dashboard"
+        xmlns:vm="clr-namespace:AsLab.Views.Master"
+        xmlns:va="clr-namespace:AsLab.Views.Akademik"
+        Title="AsLab" Width="1360" Height="840" MinWidth="1100" MinHeight="680"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Background="{DynamicResource Latar}" Foreground="{DynamicResource Teks}">
+
+    <Window.Resources>
+        <!-- Menentukan View yang dipakai untuk setiap ViewModel halaman. -->
+        <DataTemplate DataType="{x:Type vd:DashboardViewModel}"><vd:DashboardView /></DataTemplate>
+        <DataTemplate DataType="{x:Type vd:DetailPraktikanViewModel}"><vd:DetailPraktikanView /></DataTemplate>
+        <DataTemplate DataType="{x:Type vd:PengaturanViewModel}"><vd:PengaturanView /></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PraktikanViewModel}"><vm:PraktikanView /></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:KelasModulViewModel}"><vm:KelasModulView /></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AkunViewModel}"><vm:AkunView /></DataTemplate>
+        <DataTemplate DataType="{x:Type va:AbsensiViewModel}"><va:AbsensiView /></DataTemplate>
+        <DataTemplate DataType="{x:Type va:InputNilaiViewModel}"><va:InputNilaiView /></DataTemplate>
+        <DataTemplate DataType="{x:Type va:RekapViewModel}"><va:RekapView /></DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="232" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Border Background="{DynamicResource Sidebar}">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Margin="22,24,22,22">
+                    <TextBlock Text="AsLab" FontSize="24" FontWeight="Bold" Foreground="White" />
+                    <TextBlock Text="Absensi &amp; Penilaian Praktikum" FontSize="12" Foreground="{DynamicResource SidebarTeks}" />
+                </StackPanel>
+
+                <Button DockPanel.Dock="Bottom" Style="{StaticResource TombolSidebar}" Margin="0,0,0,16"
+                        Command="{Binding LogoutCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Ikon}" Text="&#xE7E8;" Width="28" />
+                        <TextBlock Text="Logout" />
+                    </StackPanel>
+                </Button>
+
+                <ItemsControl ItemsSource="{Binding Menu}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <RadioButton Style="{StaticResource ItemMenu}" GroupName="Menu"
+                                         IsChecked="{Binding Aktif, Mode=OneWay}"
+                                         Command="{Binding DataContext.PilihCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                         CommandParameter="{Binding}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource Ikon}" Text="{Binding Ikon}" Width="28" />
+                                    <TextBlock Text="{Binding Judul}" />
+                                </StackPanel>
+                            </RadioButton>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DockPanel>
+        </Border>
+
+        <!-- Header + isi halaman -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border Background="{DynamicResource Permukaan}" BorderBrush="{DynamicResource Garis}" BorderThickness="0,0,0,1"
+                    Padding="24,14">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Command="{Binding GantiTemaCommand}" ToolTip="Ganti tema terang/gelap" Padding="10,6" Margin="0,0,16,0">
+                            <TextBlock Style="{StaticResource Ikon}" Text="{Binding IkonTema}" FontSize="16" />
+                        </Button>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding NamaPengguna}" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                            <TextBlock Text="{Binding PeranPengguna}" Style="{StaticResource Redup}" FontSize="12" HorizontalAlignment="Right" />
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Halaman.Judul}" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center" />
+                </DockPanel>
+            </Border>
+
+            <ContentControl Grid.Row="1" Content="{Binding Halaman}" Margin="24,20,24,20" />
+        </Grid>
+    </Grid>
+</Window>

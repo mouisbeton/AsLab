@@ -1,0 +1,75 @@
+<UserControl x:Class="AsLab.Views.Akademik.InputNilaiView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <!-- Sel nilai: TextBox di dalam bingkai yang berubah merah bila tidak valid -->
+        <Style x:Key="KotakNilai" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="IsReadOnly" Value="{Binding Terkunci}" />
+        </Style>
+
+        <!-- Isi satu sel skor. DataContext-nya adalah SelSkor (lihat InputNilaiViewModel.cs). -->
+        <DataTemplate x:Key="TemplateSel">
+            <Border Style="{StaticResource BingkaiInput}" Tag="{Binding Error}" ToolTip="{Binding Error}">
+                <TextBox Text="{Binding Teks, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource KotakNilai}" />
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="320" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="0,0,12,0">
+                    <TextBlock Text="Kelas" Style="{StaticResource Label}" Margin="0,0,0,4" />
+                    <ComboBox ItemsSource="{Binding DaftarKelas}" SelectedItem="{Binding KelasTerpilih}" HorizontalAlignment="Stretch" />
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Modul" Style="{StaticResource Label}" Margin="0,0,0,4" />
+                    <ComboBox ItemsSource="{Binding DaftarModul}" SelectedItem="{Binding ModulTerpilih}" HorizontalAlignment="Stretch" />
+                </StackPanel>
+                <Button Grid.Column="2" Content="Simpan Nilai" Command="{Binding SimpanCommand}" IsEnabled="{Binding BisaDiubah}"
+                        Style="{DynamicResource AccentButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+            </Grid>
+
+            <Border Style="{StaticResource BannerKunci}" Margin="0,12,0,0"
+                    Visibility="{Binding Terkunci, Converter={StaticResource BoolKeVisibility}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Ikon}" Text="&#xE72E;" Margin="0,0,8,0" />
+                    <TextBlock Text="Nilai kelas ini sudah difinalisasi dan dikunci (read-only)." />
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="{Binding PesanError}" Style="{StaticResource PesanError}" Margin="0,10,0,0" />
+            <TextBlock Text="{Binding PesanSukses}" Style="{StaticResource PesanSukses}" Margin="0,10,0,0" />
+            <TextBlock Style="{StaticResource Redup}" Margin="0,12,0,8">
+                <Run Text="{Binding InfoBobot, Mode=OneWay}" />
+                <Run Text="  ·  Isi angka 0–100; nilai modul terhitung otomatis. Baris kosong tidak disimpan." />
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Kolom skor (satu per komponen nilai) ditambahkan dari code-behind, setelah kolom Nama. -->
+        <DataGrid x:Name="Tabel" ItemsSource="{Binding Baris}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="NRP" Binding="{Binding Nrp}" Width="120" />
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Nama" Binding="{Binding Nama}" Width="*" MinWidth="160" />
+                <DataGridTemplateColumn Header="Nilai Modul" Width="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource Ikon}" Text="&#xE72E;" Margin="0,0,6,0" Foreground="{DynamicResource Peringatan}"
+                                           Visibility="{Binding Terkunci, Converter={StaticResource BoolKeVisibility}}" />
+                                <TextBlock Text="{Binding NilaiModul}" FontWeight="SemiBold" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

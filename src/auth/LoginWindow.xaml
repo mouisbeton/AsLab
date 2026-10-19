@@ -1,0 +1,28 @@
+<Window x:Class="AsLab.Auth.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AsLab — Login" Width="440" Height="560" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource Latar}" Foreground="{DynamicResource Teks}">
+
+    <Border Style="{StaticResource Kartu}" Margin="28" Padding="30">
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="AsLab" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource Utama}" />
+            <TextBlock Text="Sistem Informasi Absensi dan Penilaian Praktikum" Style="{StaticResource Redup}" Margin="0,4,0,24" />
+
+            <TextBlock Text="Username" Style="{StaticResource Label}" />
+            <TextBox x:Name="KotakUsername" />
+
+            <TextBlock Text="Password" Style="{StaticResource Label}" />
+            <PasswordBox x:Name="KotakPassword" />
+
+            <TextBlock x:Name="TeksError" Style="{StaticResource PesanError}" Margin="0,14,0,0" />
+
+            <Button Content="Masuk" IsDefault="True" Click="Masuk_Click" Style="{DynamicResource AccentButtonStyle}"
+                    HorizontalAlignment="Stretch" Margin="0,22,0,0" Padding="0,9" />
+
+            <TextBlock Text="Akun contoh tercantum di README proyek." Style="{StaticResource Redup}" FontSize="11"
+                       Margin="0,18,0,0" HorizontalAlignment="Center" />
+        </StackPanel>
+    </Border>
+</Window>

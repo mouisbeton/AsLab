@@ -1,0 +1,199 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="clr-namespace:AsLab.Ui">
+    <!-- Style bersama (kontrak "kerangka UI & komponen bersama", PRD 13.4).
+         Warna selalu memakai DynamicResource agar ikut berubah saat tema diganti. -->
+
+    <!-- Konverter -->
+    <BooleanToVisibilityConverter x:Key="BoolKeVisibility" />
+    <ui:AdaKeVisibilityKonverter x:Key="AdaKeVisibility" />
+    <ui:AdaKeVisibilityKonverter x:Key="TidakAdaKeVisibility" Balik="True" />
+    <ui:StatusSamaKonverter x:Key="StatusSama" />
+
+    <!-- Kartu: kotak putih bersudut untuk mengelompokkan isi halaman -->
+    <Style x:Key="Kartu" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource Permukaan}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Garis}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <Style x:Key="JudulKartu" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+        <Setter Property="Foreground" Value="{DynamicResource Teks}" />
+    </Style>
+
+    <!-- Label kecil di atas input form -->
+    <Style x:Key="Label" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Margin" Value="0,10,0,4" />
+        <Setter Property="Foreground" Value="{DynamicResource TeksRedup}" />
+    </Style>
+
+    <Style x:Key="Redup" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TeksRedup}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <!-- Teks di sel tabel: rata tengah vertikal dengan sedikit jarak dari garis -->
+    <Style x:Key="SelTeks" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="8,4" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+
+    <Style x:Key="SelTeksPanjang" TargetType="TextBlock" BasedOn="{StaticResource SelTeks}">
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="TextTrimming" Value="None" />
+    </Style>
+
+    <!-- Ikon dari font bawaan Windows (Segoe Fluent Icons di Windows 11, MDL2 di Windows 10) -->
+    <Style x:Key="Ikon" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- Pesan error dan sukses; otomatis tersembunyi bila kosong -->
+    <Style x:Key="PesanError" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource Bahaya}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Style.Triggers>
+            <Trigger Property="Text" Value="">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Trigger>
+            <Trigger Property="Text" Value="{x:Null}">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PesanSukses" TargetType="TextBlock" BasedOn="{StaticResource PesanError}">
+        <Setter Property="Foreground" Value="{DynamicResource Sukses}" />
+    </Style>
+
+    <!-- Badge status berwarna. Isi Tag dengan teks status, misalnya Tag="{Binding Status}". -->
+    <Style x:Key="Badge" TargetType="Border">
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="9,2" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="{DynamicResource NetralLembut}" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource TeksRedup}" />
+        <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+        <Setter Property="TextElement.FontSize" Value="12" />
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Hadir">
+                <Setter Property="Background" Value="{DynamicResource SuksesLembut}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource Sukses}" />
+            </Trigger>
+            <Trigger Property="Tag" Value="Lulus">
+                <Setter Property="Background" Value="{DynamicResource SuksesLembut}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource Sukses}" />
+            </Trigger>
+            <Trigger Property="Tag" Value="Aman">
+                <Setter Property="Background" Value="{DynamicResource SuksesLembut}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource Sukses}" />
+            </Trigger>
+            <Trigger Property="Tag" Value="Izin">
+                <Setter Property="Background" Value="{DynamicResource InfoLembut}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource Info}" />
+            </Trigger>
+            <Trigger Property="Tag" Value="Berjalan">
+                <Setter Property="Background" Value="{DynamicResource InfoLembut}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource Info}" />
+            </Trigger>
+            <Trigger Property="Tag" Value="Sakit">
+                <Setter Property="Background" Value="{DynamicResource PeringatanLembut}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource Peringatan}" />
+            </Trigger>
+            <Trigger Property="Tag" Value="Alpa">
+                <Setter Property="Background" Value="{DynamicResource BahayaLembut}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource Bahaya}" />
+            </Trigger>
+            <Trigger Property="Tag" Value="Tidak Lulus">
+                <Setter Property="Background" Value="{DynamicResource BahayaLembut}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource Bahaya}" />
+            </Trigger>
+            <Trigger Property="Tag" Value="Tidak Memenuhi Syarat">
+                <Setter Property="Background" Value="{DynamicResource BahayaLembut}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource Bahaya}" />
+            </Trigger>
+            <Trigger Property="Tag" Value="Berisiko">
+                <Setter Property="Background" Value="{DynamicResource BahayaLembut}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource Bahaya}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Bingkai sel input nilai: merah bila Tag berisi pesan error, transparan bila Tag kosong (null) -->
+    <Style x:Key="BingkaiInput" TargetType="Border">
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Bahaya}" />
+        <Setter Property="Background" Value="{DynamicResource BahayaLembut}" />
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="{x:Null}">
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Background" Value="Transparent" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Banner kuning saat kelas terkunci -->
+    <Style x:Key="BannerKunci" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource PeringatanLembut}" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource Peringatan}" />
+        <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+    </Style>
+
+    <!-- Item menu sidebar -->
+    <Style x:Key="ItemMenu" TargetType="RadioButton">
+        <Setter Property="Foreground" Value="{DynamicResource SidebarTeks}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Latar" Background="Transparent" CornerRadius="6" Padding="12,10" Margin="10,2">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Latar" Property="Background" Value="{DynamicResource SidebarHover}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Latar" Property="Background" Value="{DynamicResource SidebarAktif}" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TombolSidebar" TargetType="Button">
+        <Setter Property="Foreground" Value="{DynamicResource SidebarTeks}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Latar" Background="Transparent" CornerRadius="6" Padding="12,10" Margin="10,2">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Latar" Property="Background" Value="{DynamicResource SidebarHover}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

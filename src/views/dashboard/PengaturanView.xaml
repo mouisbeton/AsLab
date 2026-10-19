@@ -1,0 +1,106 @@
+<UserControl x:Class="AsLab.Views.Dashboard.PengaturanView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="380" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.ColumnSpan="2" Margin="0,0,0,12">
+            <TextBlock Text="{Binding PesanError}" Style="{StaticResource PesanError}" />
+            <TextBlock Text="{Binding PesanSukses}" Style="{StaticResource PesanSukses}" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <!-- Komponen nilai -->
+            <Border Style="{StaticResource Kartu}">
+                <StackPanel>
+                    <TextBlock Text="Komponen Nilai" Style="{StaticResource JudulKartu}" />
+                    <TextBlock Text="Nilai modul = jumlah (skor × bobot) ÷ 100. Total bobot harus 100%. Menyimpan perubahan menghitung ulang semua nilai modul; tidak bisa dilakukan bila ada kelas yang sudah dikunci."
+                               Style="{StaticResource Redup}" FontSize="12" />
+                    <TextBlock Text="Mata praktikum" Style="{StaticResource Label}" />
+                    <ComboBox ItemsSource="{Binding DaftarPraktikum}" SelectedItem="{Binding PraktikumTerpilih}" DisplayMemberPath="Label" />
+
+                    <Grid Margin="0,12,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="90" />
+                            <ColumnDefinition Width="40" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Nama komponen" Style="{StaticResource Label}" Margin="0" />
+                        <TextBlock Grid.Column="1" Text="Bobot (%)" Style="{StaticResource Label}" Margin="6,0,0,0" />
+                    </Grid>
+                    <ItemsControl ItemsSource="{Binding Komponen}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="90" />
+                                        <ColumnDefinition Width="40" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Text="{Binding Nama, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Grid.Column="1" Text="{Binding Bobot, UpdateSourceTrigger=PropertyChanged}" Margin="6,0,0,0"
+                                             HorizontalContentAlignment="Right" />
+                                    <Button Grid.Column="2" Margin="6,0,0,0" ToolTip="Hapus komponen" Padding="6"
+                                            Command="{Binding DataContext.HapusKomponenCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}">
+                                        <TextBlock Style="{StaticResource Ikon}" Text="&#xE74D;" />
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Button Content="+ Tambah komponen" Command="{Binding TambahKomponenCommand}" HorizontalAlignment="Left" />
+                    <TextBlock Text="Sudah ada nilai yang diinput, jadi komponen hanya bisa diganti nama dan bobotnya."
+                               Style="{StaticResource Redup}" FontSize="12" Margin="0,8,0,0"
+                               Visibility="{Binding SudahAdaNilai, Converter={StaticResource BoolKeVisibility}}" />
+                    <DockPanel Margin="0,14,0,0">
+                        <Button DockPanel.Dock="Right" Content="Simpan Komponen" Command="{Binding SimpanKomponenCommand}" Style="{DynamicResource AccentButtonStyle}" />
+                        <TextBlock Text="{Binding TotalBobot}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Tampilan -->
+            <Border Style="{StaticResource Kartu}" Margin="0,16,0,0">
+                <StackPanel>
+                    <TextBlock Text="Tampilan" Style="{StaticResource JudulKartu}" />
+                    <CheckBox Content="Gunakan tema gelap" IsChecked="{Binding TemaGelap}" />
+                </StackPanel>
+            </Border>
+
+            <!-- Backup -->
+            <Border Style="{StaticResource Kartu}" Margin="0,16,0,0">
+                <StackPanel>
+                    <TextBlock Text="Backup Database" Style="{StaticResource JudulKartu}" />
+                    <TextBlock Text="Membuat file backup SQL Server (.bak). Pulihkan lewat SSMS: Databases → Restore Database. Simpan di folder yang bisa diakses SQL Server, misalnya C:SERSPUBLICDOCUMENTS."
+                               Style="{StaticResource Redup}" FontSize="12" Margin="0,0,0,10" />
+                    <Button Content="Buat Backup…" Command="{Binding BackupCommand}" HorizontalAlignment="Left" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+        </ScrollViewer>
+
+        <!-- Log aktivitas -->
+        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource Kartu}" Margin="16,0,0,0">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="Log Aktivitas (100 terbaru)" Style="{StaticResource JudulKartu}" />
+                <DataGrid ItemsSource="{Binding Log}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Waktu" Binding="{Binding WaktuTeks}" Width="135" />
+                        <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Pengguna" Binding="{Binding NamaPengguna}" Width="130" />
+                        <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Aksi" Binding="{Binding Aksi}" Width="125" />
+                        <DataGridTextColumn ElementStyle="{StaticResource SelTeksPanjang}" Header="Detail" Binding="{Binding Detail}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+    </Grid>
+</UserControl>

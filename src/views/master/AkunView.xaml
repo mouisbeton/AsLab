@@ -1,0 +1,71 @@
+<UserControl x:Class="AsLab.Views.Master.AkunView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="320" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.ColumnSpan="2" Margin="0,0,0,12">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                <Button Content="+ Akun Baru" Command="{Binding BaruCommand}" Style="{DynamicResource AccentButtonStyle}" Margin="0,0,8,0" />
+                <Button Content="Hapus" Command="{Binding HapusCommand}" />
+            </StackPanel>
+            <TextBlock Text="{Binding PesanError}" Style="{StaticResource PesanError}" />
+            <TextBlock Text="{Binding PesanSukses}" Style="{StaticResource PesanSukses}" />
+        </StackPanel>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding DaftarAkun}" SelectedItem="{Binding AkunTerpilih}"
+                  AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Username" Binding="{Binding Username}" Width="140" />
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Nama" Binding="{Binding Nama}" Width="*" />
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Peran" Binding="{Binding PeranLabel}" Width="110" />
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Kelas ditugaskan" Binding="{Binding KelasDitugaskan}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="16,0,0,0">
+            <!-- Form akun -->
+            <Border Style="{StaticResource Kartu}">
+                <StackPanel>
+                    <TextBlock Text="{Binding JudulForm}" Style="{StaticResource JudulKartu}" />
+                    <TextBlock Text="Username" Style="{StaticResource Label}" />
+                    <TextBox Text="{Binding FormUsername}" />
+                    <TextBlock Text="Nama" Style="{StaticResource Label}" />
+                    <TextBox Text="{Binding FormNama}" />
+                    <TextBlock Text="Peran" Style="{StaticResource Label}" />
+                    <ComboBox ItemsSource="{Binding DaftarPeran}" DisplayMemberPath="Label" SelectedValuePath="Nilai"
+                              SelectedValue="{Binding FormPeran}" HorizontalAlignment="Stretch" />
+                    <TextBlock Text="Password (kosongkan bila tidak diganti)" Style="{StaticResource Label}" />
+                    <PasswordBox x:Name="KotakPassword" PasswordChanged="KotakPassword_PasswordChanged" />
+                    <Button Content="Simpan Akun" Command="{Binding SimpanCommand}" Style="{DynamicResource AccentButtonStyle}"
+                            HorizontalAlignment="Left" Margin="0,14,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Penugasan asisten (hanya untuk akun asisten) -->
+            <Border Style="{StaticResource Kartu}" Margin="0,16,0,0"
+                    Visibility="{Binding TampilkanPenugasan, Converter={StaticResource BoolKeVisibility}}">
+                <StackPanel>
+                    <TextBlock Text="Penugasan ke Kelas" Style="{StaticResource JudulKartu}" />
+                    <TextBlock Text="Asisten hanya dapat membuka absensi, nilai, dan rekap kelas yang dicentang."
+                               Style="{StaticResource Redup}" FontSize="12" Margin="0,0,0,8" />
+                    <ItemsControl ItemsSource="{Binding Penugasan}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Content="{Binding Label}" IsChecked="{Binding Dipilih}" Margin="0,2" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Button Content="Simpan Penugasan" Command="{Binding SimpanPenugasanCommand}" HorizontalAlignment="Left" Margin="0,10,0,0" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>

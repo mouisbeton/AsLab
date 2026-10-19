@@ -1,0 +1,72 @@
+<UserControl x:Class="AsLab.Views.Akademik.AbsensiView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DockPanel>
+        <!-- Pilih kelas & modul -->
+        <StackPanel DockPanel.Dock="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220" />
+                    <ColumnDefinition Width="320" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="0,0,12,0">
+                    <TextBlock Text="Kelas" Style="{StaticResource Label}" Margin="0,0,0,4" />
+                    <ComboBox ItemsSource="{Binding DaftarKelas}" SelectedItem="{Binding KelasTerpilih}" HorizontalAlignment="Stretch" />
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Modul" Style="{StaticResource Label}" Margin="0,0,0,4" />
+                    <ComboBox ItemsSource="{Binding DaftarModul}" SelectedItem="{Binding ModulTerpilih}" HorizontalAlignment="Stretch" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <Button Content="Tandai semua hadir" Command="{Binding TandaiSemuaHadirCommand}" IsEnabled="{Binding BisaDiubah}" Margin="0,0,8,0" />
+                    <Button Content="Simpan Absensi" Command="{Binding SimpanCommand}" IsEnabled="{Binding BisaDiubah}" Style="{DynamicResource AccentButtonStyle}" />
+                </StackPanel>
+            </Grid>
+
+            <Border Style="{StaticResource BannerKunci}" Margin="0,12,0,0"
+                    Visibility="{Binding Terkunci, Converter={StaticResource BoolKeVisibility}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Ikon}" Text="&#xE72E;" Margin="0,0,8,0" />
+                    <TextBlock Text="Kelas ini sudah difinalisasi dan dikunci. Absensi hanya dapat dilihat." />
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="{Binding PesanError}" Style="{StaticResource PesanError}" Margin="0,10,0,0" />
+            <TextBlock Text="{Binding PesanSukses}" Style="{StaticResource PesanSukses}" Margin="0,10,0,0" />
+            <TextBlock Text="{Binding Ringkasan}" Style="{StaticResource Redup}" Margin="0,12,0,8" />
+        </StackPanel>
+
+        <!-- Tabel absensi -->
+        <DataGrid ItemsSource="{Binding Baris}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="NRP" Binding="{Binding Nrp}" Width="120" />
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Nama" Binding="{Binding Nama}" Width="*" />
+                <DataGridTemplateColumn Header="Status" Width="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource Badge}" Tag="{Binding Status}">
+                                <TextBlock Text="{Binding Status, TargetNullValue=Belum diisi}" />
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Ubah status" Width="360">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <!-- 4 pilihan dalam satu StackPanel otomatis menjadi satu grup radio -->
+                            <StackPanel Orientation="Horizontal"
+                                        IsEnabled="{Binding DataContext.BisaDiubah, RelativeSource={RelativeSource AncestorType=DataGrid}}">
+                                <RadioButton Content="Hadir" IsChecked="{Binding Status, Converter={StaticResource StatusSama}, ConverterParameter=Hadir}" MinWidth="80" />
+                                <RadioButton Content="Izin" IsChecked="{Binding Status, Converter={StaticResource StatusSama}, ConverterParameter=Izin}" MinWidth="80" />
+                                <RadioButton Content="Sakit" IsChecked="{Binding Status, Converter={StaticResource StatusSama}, ConverterParameter=Sakit}" MinWidth="80" />
+                                <RadioButton Content="Alpa" IsChecked="{Binding Status, Converter={StaticResource StatusSama}, ConverterParameter=Alpa}" MinWidth="80" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

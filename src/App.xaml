@@ -1,0 +1,15 @@
+﻿<Application x:Class="AsLab.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             ThemeMode="Light">
+    <!-- ThemeMode memakai gaya Fluent bawaan WPF untuk tombol, tabel, input, dll.
+         Warna khusus AsLab ada di ui/Tema; Gaya.xaml berisi style yang dipakai bersama. -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ui/Tema/WarnaTerang.xaml" />
+                <ResourceDictionary Source="ui/Tema/Gaya.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

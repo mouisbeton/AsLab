@@ -1,0 +1,206 @@
+<UserControl x:Class="AsLab.Views.Master.KelasModulView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.ColumnSpan="2" Margin="0,0,0,12">
+            <TextBlock Text="{Binding PesanError}" Style="{StaticResource PesanError}" />
+            <TextBlock Text="{Binding PesanSukses}" Style="{StaticResource PesanSukses}" />
+        </StackPanel>
+
+        <!-- KIRI: mata praktikum -->
+        <Border Grid.Row="1" Style="{StaticResource Kartu}">
+            <DockPanel>
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                    <Button DockPanel.Dock="Right" Content="+ Baru" Command="{Binding BaruPraktikumCommand}" />
+                    <TextBlock Text="Mata Praktikum" Style="{StaticResource JudulKartu}" Margin="0" VerticalAlignment="Center" />
+                </DockPanel>
+
+                <StackPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
+                    <TextBlock Text="Kode" Style="{StaticResource Label}" />
+                    <TextBox Text="{Binding MpKode}" />
+                    <TextBlock Text="Nama" Style="{StaticResource Label}" />
+                    <TextBox Text="{Binding MpNama}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Margin="0,0,6,0">
+                            <TextBlock Text="Semester" Style="{StaticResource Label}" />
+                            <ComboBox ItemsSource="{Binding DaftarSemester}" SelectedItem="{Binding MpSemester}" HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                            <TextBlock Text="Tahun ajaran" Style="{StaticResource Label}" />
+                            <TextBox Text="{Binding MpTahun}" />
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="Dosen pengampu" Style="{StaticResource Label}" />
+                    <ComboBox ItemsSource="{Binding DaftarDosen}" SelectedItem="{Binding MpDosen}" HorizontalAlignment="Stretch" />
+                    <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                        <Button Content="Simpan" Command="{Binding SimpanPraktikumCommand}" Style="{DynamicResource AccentButtonStyle}" Margin="0,0,8,0" />
+                        <Button Content="Hapus" Command="{Binding HapusPraktikumCommand}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <ListBox ItemsSource="{Binding DaftarPraktikum}" SelectedItem="{Binding PraktikumTerpilih}" DisplayMemberPath="Label" />
+            </DockPanel>
+        </Border>
+
+        <!-- KANAN: kelas dan modul dari mata praktikum terpilih -->
+        <TabControl Grid.Row="1" Grid.Column="1" Margin="16,0,0,0"
+                    IsEnabled="{Binding AdaPraktikum}">
+            <TabItem Header="Kelas">
+                <Grid Margin="0,12,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="130" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- daftar kelas -->
+                    <DataGrid ItemsSource="{Binding DaftarKelas}" SelectedItem="{Binding KelasTerpilih}"
+                              AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Kelas" Binding="{Binding NamaKelas}" Width="70" />
+                            <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Hari" Binding="{Binding Hari}" Width="80" />
+                            <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Jam" Binding="{Binding Jam}" Width="110" />
+                            <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Ruang" Binding="{Binding Ruang}" Width="*" />
+                            <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Peserta" Binding="{Binding JumlahPeserta}" Width="80" />
+                            <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Asisten" Binding="{Binding Asisten}" Width="*" />
+                            <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Status" Binding="{Binding StatusKunci}" Width="80" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- form kelas dalam satu baris -->
+                    <Border Grid.Row="1" Style="{StaticResource Kartu}" Margin="0,10,0,0" Padding="12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="140" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,8,0">
+                                <TextBlock Text="Nama kelas" Style="{StaticResource Label}" Margin="0,0,0,4" />
+                                <TextBox Text="{Binding KlsNama}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                                <TextBlock Text="Hari" Style="{StaticResource Label}" Margin="0,0,0,4" />
+                                <ComboBox ItemsSource="{Binding DaftarHari}" SelectedItem="{Binding KlsHari}" HorizontalAlignment="Stretch" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                                <TextBlock Text="Jam" Style="{StaticResource Label}" Margin="0,0,0,4" />
+                                <TextBox Text="{Binding KlsJam}" ToolTip="Contoh 07:00–09:30" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                                <TextBlock Text="Ruang" Style="{StaticResource Label}" Margin="0,0,0,4" />
+                                <TextBox Text="{Binding KlsRuang}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Bottom">
+                                <Button Content="Simpan" Command="{Binding SimpanKelasCommand}" Style="{DynamicResource AccentButtonStyle}" Margin="0,0,8,0" />
+                                <Button Content="Hapus" Command="{Binding HapusKelasCommand}" Margin="0,0,8,0" />
+                                <Button Content="+ Kelas Baru" Command="{Binding BaruKelasCommand}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- detail kelas terpilih: peserta + jadwal -->
+                    <Grid Grid.Row="2" Margin="0,10,0,0" Visibility="{Binding AdaKelas, Converter={StaticResource BoolKeVisibility}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Style="{StaticResource Kartu}" Margin="0,0,6,0">
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top" Style="{StaticResource JudulKartu}">
+                                    <Run Text="Peserta Kelas" /> <Run Text="{Binding KelasTerpilih.NamaKelas, Mode=OneWay}" />
+                                </TextBlock>
+                                <TextBlock DockPanel.Dock="Top" Text="Asisten kelas diatur di halaman Asisten &amp; Akun."
+                                           Style="{StaticResource Redup}" FontSize="12" Margin="0,-6,0,8" />
+                                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                                    <Button DockPanel.Dock="Right" Content="Tambah" Command="{Binding TambahPesertaCommand}" Margin="8,0,0,0" />
+                                    <ComboBox ItemsSource="{Binding Kandidat}" SelectedItem="{Binding KandidatTerpilih}" HorizontalAlignment="Stretch"
+                                              ToolTip="Praktikan yang belum terdaftar di kelas lain pada mata praktikum ini" />
+                                </DockPanel>
+                                <Button DockPanel.Dock="Bottom" Content="Keluarkan dari kelas" Command="{Binding KeluarkanPesertaCommand}"
+                                        HorizontalAlignment="Left" Margin="0,8,0,0" />
+                                <DataGrid ItemsSource="{Binding Peserta}" SelectedItem="{Binding PesertaTerpilih}"
+                                          AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" SelectionMode="Single">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="NRP" Binding="{Binding Nrp}" Width="110" />
+                                        <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Nama" Binding="{Binding Nama}" Width="*" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DockPanel>
+                        </Border>
+
+                        <Border Grid.Column="1" Style="{StaticResource Kartu}" Margin="6,0,0,0">
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top" Text="Jadwal Modul di Kelas Ini" Style="{StaticResource JudulKartu}" />
+                                <Button DockPanel.Dock="Bottom" Content="Simpan Jadwal" Command="{Binding SimpanJadwalCommand}"
+                                        Style="{DynamicResource AccentButtonStyle}" HorizontalAlignment="Left" Margin="0,8,0,0" />
+                                <DataGrid ItemsSource="{Binding Jadwal}" AutoGenerateColumns="False" HeadersVisibility="Column"
+                                          CanUserAddRows="False" CanUserDeleteRows="False" SelectionMode="Single">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Modul" Binding="{Binding Label}" IsReadOnly="True" Width="*" />
+                                        <DataGridTemplateColumn Header="Tanggal" Width="170">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <DatePicker SelectedDate="{Binding Tanggal, UpdateSourceTrigger=PropertyChanged}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DockPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Modul">
+                <Grid Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="260" />
+                    </Grid.ColumnDefinitions>
+                    <DataGrid ItemsSource="{Binding DaftarModul}" SelectedItem="{Binding ModulTerpilih}"
+                              AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="No" Binding="{Binding Nomor}" Width="60" />
+                            <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Judul" Binding="{Binding Judul}" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Border Grid.Column="1" Style="{StaticResource Kartu}" Margin="12,0,0,0" VerticalAlignment="Top">
+                        <StackPanel>
+                            <DockPanel>
+                                <Button DockPanel.Dock="Right" Content="+ Baru" Command="{Binding BaruModulCommand}" />
+                                <TextBlock Text="Form Modul" Style="{StaticResource JudulKartu}" Margin="0" VerticalAlignment="Center" />
+                            </DockPanel>
+                            <TextBlock Text="Nomor" Style="{StaticResource Label}" />
+                            <TextBox Text="{Binding MdlNomor}" />
+                            <TextBlock Text="Judul" Style="{StaticResource Label}" />
+                            <TextBox Text="{Binding MdlJudul}" />
+                            <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                                <Button Content="Simpan" Command="{Binding SimpanModulCommand}" Style="{DynamicResource AccentButtonStyle}" Margin="0,0,8,0" />
+                                <Button Content="Hapus" Command="{Binding HapusModulCommand}" />
+                            </StackPanel>
+                            <TextBlock Text="Tanggal modul diatur per kelas di tab Kelas." Style="{StaticResource Redup}" FontSize="12" Margin="0,12,0,0" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

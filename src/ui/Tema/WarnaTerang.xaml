@@ -1,0 +1,26 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Warna tema terang. WarnaGelap.xaml harus memiliki kunci (x:Key) yang sama persis. -->
+    <SolidColorBrush x:Key="Latar" Color="#F3F5F9" />
+    <SolidColorBrush x:Key="Permukaan" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="Garis" Color="#DDE2EA" />
+    <SolidColorBrush x:Key="Teks" Color="#1B2330" />
+    <SolidColorBrush x:Key="TeksRedup" Color="#5F6B7A" />
+
+    <SolidColorBrush x:Key="Sidebar" Color="#1E2A3B" />
+    <SolidColorBrush x:Key="SidebarTeks" Color="#C9D3E1" />
+    <SolidColorBrush x:Key="SidebarHover" Color="#27364B" />
+    <SolidColorBrush x:Key="SidebarAktif" Color="#34496A" />
+
+    <SolidColorBrush x:Key="Utama" Color="#3B5BDB" />
+    <SolidColorBrush x:Key="UtamaLembut" Color="#E5EAFB" />
+    <SolidColorBrush x:Key="Sukses" Color="#237A47" />
+    <SolidColorBrush x:Key="SuksesLembut" Color="#DDF3E5" />
+    <SolidColorBrush x:Key="Info" Color="#1F64B3" />
+    <SolidColorBrush x:Key="InfoLembut" Color="#DCEBFA" />
+    <SolidColorBrush x:Key="Peringatan" Color="#9A5B00" />
+    <SolidColorBrush x:Key="PeringatanLembut" Color="#FCEFD5" />
+    <SolidColorBrush x:Key="Bahaya" Color="#C02B2B" />
+    <SolidColorBrush x:Key="BahayaLembut" Color="#FBE3E3" />
+    <SolidColorBrush x:Key="NetralLembut" Color="#ECEFF3" />
+</ResourceDictionary>

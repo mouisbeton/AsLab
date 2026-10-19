@@ -1,0 +1,93 @@
+<UserControl x:Class="AsLab.Views.Dashboard.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:AsLab.Ui"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <TextBlock Text="{Binding PesanError}" Style="{StaticResource PesanError}" Margin="0,0,0,12" />
+
+            <!-- 4 kartu statistik -->
+            <UniformGrid Columns="4">
+                <ui:KartuStatistik Judul="Total Praktikan" Nilai="{Binding TotalPraktikan}" Ikon="&#xE716;" Margin="0,0,12,0" />
+                <ui:KartuStatistik Judul="Kelas Aktif" Nilai="{Binding KelasAktif}" Keterangan="belum difinalisasi" Ikon="&#xE8F1;" Margin="6,0" />
+                <ui:KartuStatistik Judul="Modul Berjalan" Nilai="{Binding ModulBerjalan}" Keterangan="sudah berlangsung" Ikon="&#xE787;" Margin="6,0" />
+                <ui:KartuStatistik Judul="Rata-rata Kehadiran" Nilai="{Binding RataKehadiran}" Keterangan="Hadir ÷ (Hadir + Alpa)" Ikon="&#xE73E;" Margin="12,0,0,0" />
+            </UniformGrid>
+
+            <!-- 2 grafik -->
+            <Grid Margin="0,16,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <Border Style="{StaticResource Kartu}" Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="Rata-rata Nilai per Modul" Style="{StaticResource JudulKartu}" />
+                        <lvc:CartesianChart Background="Transparent" Series="{Binding GrafikBatang}" XAxes="{Binding SumbuX}" YAxes="{Binding SumbuY}" Height="250" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource Kartu}" Margin="8,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Distribusi Nilai Huruf" Style="{StaticResource JudulKartu}" />
+                        <lvc:PieChart Background="Transparent" Series="{Binding GrafikDonat}" LegendPosition="Right" LegendTextPaint="{Binding WarnaLegenda}" Height="250" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Praktikan berisiko + aktivitas terbaru -->
+            <Grid Margin="0,16,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <Border Style="{StaticResource Kartu}" Margin="0,0,8,0">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,10">
+                            <Button DockPanel.Dock="Right" Content="Lihat detail" Command="{Binding BukaDetailCommand}" />
+                            <TextBlock Text="⚠ Praktikan Berisiko" Style="{StaticResource JudulKartu}" Margin="0" VerticalAlignment="Center" />
+                        </DockPanel>
+                        <TextBlock Text="Kehadiran &lt; 75% atau nilai sementara &lt; 56. Klik dua kali untuk melihat detail."
+                                   Style="{StaticResource Redup}" FontSize="12" Margin="0,0,0,8" />
+                        <DataGrid ItemsSource="{Binding Berisiko}" SelectedItem="{Binding RisikoTerpilih}" MaxHeight="260"
+                                  AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" SelectionMode="Single">
+                            <DataGrid.InputBindings>
+                                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding BukaDetailCommand}" />
+                            </DataGrid.InputBindings>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="NRP" Binding="{Binding Nrp}" Width="110" />
+                                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Nama" Binding="{Binding Nama}" Width="*" />
+                                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Kelas" Binding="{Binding Kelas}" Width="115" />
+                                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Alasan" Binding="{Binding Alasan}" Width="205" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <TextBlock Text="Tidak ada praktikan berisiko." Style="{StaticResource Redup}" Margin="0,8,0,0"
+                                   Visibility="{Binding Berisiko.Count, Converter={StaticResource TidakAdaKeVisibility}}" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource Kartu}" Margin="8,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Aktivitas Terbaru" Style="{StaticResource JudulKartu}" />
+                        <TextBlock Text="Belum ada aktivitas Anda." Style="{StaticResource Redup}"
+                                   Visibility="{Binding Aktivitas.Count, Converter={StaticResource TidakAdaKeVisibility}}" />
+                        <ItemsControl ItemsSource="{Binding Aktivitas}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,10">
+                                        <TextBlock>
+                                            <Run Text="{Binding NamaPengguna, Mode=OneWay}" FontWeight="SemiBold" />
+                                            <Run Text="·" />
+                                            <Run Text="{Binding Aksi, Mode=OneWay}" />
+                                        </TextBlock>
+                                        <TextBlock Text="{Binding Detail}" Style="{StaticResource Redup}" FontSize="12" />
+                                        <TextBlock Text="{Binding WaktuTeks}" Style="{StaticResource Redup}" FontSize="11" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

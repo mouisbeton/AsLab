@@ -1,0 +1,93 @@
+<UserControl x:Class="AsLab.Views.Dashboard.DetailPraktikanView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:AsLab.Ui"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <DockPanel Margin="0,0,0,12">
+                <Button DockPanel.Dock="Left" Command="{Binding KembaliCommand}" Margin="0,0,12,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Ikon}" Text="&#xE72B;" Margin="0,0,6,0" />
+                        <TextBlock Text="Kembali" />
+                    </StackPanel>
+                </Button>
+                <TextBlock Text="{Binding PesanError}" Style="{StaticResource PesanError}" VerticalAlignment="Center" />
+            </DockPanel>
+
+            <!-- Profil -->
+            <Border Style="{StaticResource Kartu}" Visibility="{Binding Data, Converter={StaticResource AdaKeVisibility}}">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center">
+                        <TextBlock Text="Kelas" Style="{StaticResource Label}" Margin="0,0,0,4" />
+                        <ComboBox ItemsSource="{Binding Data.DaftarKelas}" SelectedItem="{Binding KelasTerpilih}" MinWidth="200" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Data.Nama}" FontSize="22" FontWeight="SemiBold" />
+                        <TextBlock Style="{StaticResource Redup}" Margin="0,4,0,0">
+                            <Run Text="NRP" /> <Run Text="{Binding Data.Nrp, Mode=OneWay}" />
+                            <Run Text="  ·  Angkatan" /> <Run Text="{Binding Data.Angkatan, Mode=OneWay}" />
+                            <Run Text="  ·  " /> <Run Text="{Binding Data.Email, Mode=OneWay}" />
+                        </TextBlock>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <TextBlock Text="Praktikan ini belum terdaftar di kelas mana pun." Style="{StaticResource Redup}" Margin="0,12,0,0"
+                       Visibility="{Binding KelasTerpilih, Converter={StaticResource TidakAdaKeVisibility}}" />
+
+            <StackPanel Visibility="{Binding KelasTerpilih, Converter={StaticResource AdaKeVisibility}}">
+                <!-- Ringkasan nilai -->
+                <UniformGrid Columns="4" Margin="0,16,0,0">
+                    <ui:KartuStatistik Judul="Nilai Sementara" Nilai="{Binding NilaiSementara}" Keterangan="modul yang sudah dinilai" Ikon="&#xE9D2;" Margin="0,0,12,0" />
+                    <ui:KartuStatistik Judul="Nilai Akhir" Nilai="{Binding NilaiAkhir}" Keterangan="seluruh modul (kosong = 0)" Ikon="&#xE8EF;" Margin="6,0" />
+                    <ui:KartuStatistik Judul="Huruf" Nilai="{Binding KelasTerpilih.Baris.Huruf}" Keterangan="{Binding KelasTerpilih.Baris.Status}" Ikon="&#xE734;" Margin="6,0" />
+                    <ui:KartuStatistik Judul="Kehadiran" Nilai="{Binding KelasTerpilih.Baris.KehadiranTeks}" Ikon="&#xE73E;" Margin="12,0,0,0">
+                        <ui:KartuStatistik.Keterangan>
+                            <MultiBinding StringFormat="Hadir {0} · Izin {1} · Sakit {2} · Alpa {3}">
+                                <Binding Path="KelasTerpilih.Baris.Hadir" />
+                                <Binding Path="KelasTerpilih.Baris.Izin" />
+                                <Binding Path="KelasTerpilih.Baris.Sakit" />
+                                <Binding Path="KelasTerpilih.Baris.Alpa" />
+                            </MultiBinding>
+                        </ui:KartuStatistik.Keterangan>
+                    </ui:KartuStatistik>
+                </UniformGrid>
+
+                <Grid Margin="0,16,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Style="{StaticResource Kartu}" Margin="0,0,8,0">
+                        <StackPanel>
+                            <TextBlock Text="Progres Nilai per Modul" Style="{StaticResource JudulKartu}" />
+                            <lvc:CartesianChart Background="Transparent" Series="{Binding GrafikProgres}" XAxes="{Binding SumbuX}" YAxes="{Binding SumbuY}" Height="260" />
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource Kartu}" Margin="8,0,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Riwayat Absensi" Style="{StaticResource JudulKartu}" />
+                            <DataGrid ItemsSource="{Binding KelasTerpilih.Absensi}" AutoGenerateColumns="False" IsReadOnly="True"
+                                      HeadersVisibility="Column" MaxHeight="300">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Modul" Binding="{Binding Modul}" Width="*" />
+                                    <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Tanggal" Binding="{Binding Tanggal}" Width="100" />
+                                    <DataGridTemplateColumn Header="Status" Width="110">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource Badge}" Tag="{Binding Status}">
+                                                    <TextBlock Text="{Binding Status}" />
+                                                </Border>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

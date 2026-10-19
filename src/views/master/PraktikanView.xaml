@@ -1,0 +1,107 @@
+<UserControl x:Class="AsLab.Views.Master.PraktikanView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Tombol aksi -->
+        <DockPanel Grid.ColumnSpan="2">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <TextBlock Text="Kelas untuk kolom nama_kelas:" Style="{StaticResource Redup}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <ComboBox ItemsSource="{Binding OpsiPraktikumImport}" SelectedItem="{Binding PraktikumImport}" MinWidth="200" Margin="0,0,8,0" />
+                <Button Content="Import CSV…" Command="{Binding ImportCommand}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Tambah" Command="{Binding TambahCommand}" Style="{DynamicResource AccentButtonStyle}" Margin="0,0,8,0" />
+                <Button Content="Edit" Command="{Binding EditCommand}" Margin="0,0,8,0" />
+                <Button Content="Hapus" Command="{Binding HapusCommand}" Margin="0,0,8,0" />
+                <Button Content="Detail" Command="{Binding DetailCommand}" />
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Pencarian & filter + pesan -->
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,14,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="150" />
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding Cari, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0"
+                         ToolTip="Cari NRP atau nama" />
+                <TextBlock Text="🔍 Cari NRP atau nama…" Style="{StaticResource Redup}" IsHitTestVisible="False"
+                           VerticalAlignment="Center" Margin="12,0,0,0"
+                           Visibility="{Binding Cari, Converter={StaticResource TidakAdaKeVisibility}}" />
+                <ComboBox Grid.Column="1" ItemsSource="{Binding OpsiKelas}" SelectedItem="{Binding FilterKelas}" Margin="0,0,8,0" />
+                <ComboBox Grid.Column="2" ItemsSource="{Binding OpsiAngkatan}" SelectedItem="{Binding FilterAngkatan}" Margin="0,0,8,0" />
+                <ComboBox Grid.Column="3" ItemsSource="{Binding OpsiStatus}" SelectedItem="{Binding FilterStatus}" />
+            </Grid>
+            <TextBlock Text="{Binding PesanError}" Style="{StaticResource PesanError}" Margin="0,10,0,0" />
+            <TextBlock Text="{Binding PesanSukses}" Style="{StaticResource PesanSukses}" Margin="0,10,0,0" />
+        </StackPanel>
+
+        <!-- Tabel -->
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Tabel}" SelectedItem="{Binding Terpilih}"
+                  AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" SelectionMode="Single">
+            <DataGrid.InputBindings>
+                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EditCommand}" />
+            </DataGrid.InputBindings>
+            <DataGrid.Columns>
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="NRP" Binding="{Binding Nrp}" Width="110" />
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Nama" Binding="{Binding Nama}" Width="*" />
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Angkatan" Binding="{Binding Angkatan}" Width="90" />
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Email" Binding="{Binding Email}" Width="*" />
+                <DataGridTextColumn ElementStyle="{StaticResource SelTeks}" Header="Kelas" Binding="{Binding Kelas}" Width="130" />
+                <DataGridTemplateColumn Header="Status" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource Badge}" Tag="{Binding StatusRisiko}">
+                                <TextBlock Text="{Binding StatusRisiko}" />
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Paging -->
+        <DockPanel Grid.Row="3" Margin="0,10,0,0">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button Content="‹ Sebelumnya" Command="{Binding SebelumnyaCommand}" Margin="0,0,8,0" />
+                <Button Content="Berikutnya ›" Command="{Binding BerikutnyaCommand}" />
+            </StackPanel>
+            <TextBlock Text="{Binding InfoHalaman}" Style="{StaticResource Redup}" VerticalAlignment="Center" />
+        </DockPanel>
+
+        <!-- Form tambah/edit (muncul di kanan) -->
+        <Border Grid.Row="2" Grid.RowSpan="2" Grid.Column="1" Width="300" Margin="16,0,0,0" Style="{StaticResource Kartu}"
+                Visibility="{Binding FormTerbuka, Converter={StaticResource BoolKeVisibility}}">
+            <StackPanel>
+                <TextBlock Text="{Binding JudulForm}" Style="{StaticResource JudulKartu}" />
+                <TextBlock Text="NRP (10 digit)" Style="{StaticResource Label}" />
+                <TextBox Text="{Binding FormNrp}" MaxLength="10" />
+                <TextBlock Text="Nama" Style="{StaticResource Label}" />
+                <TextBox Text="{Binding FormNama}" />
+                <TextBlock Text="Angkatan" Style="{StaticResource Label}" />
+                <TextBox Text="{Binding FormAngkatan}" MaxLength="4" />
+                <TextBlock Text="Email (opsional)" Style="{StaticResource Label}" />
+                <TextBox Text="{Binding FormEmail}" />
+                <TextBlock Text="Kelas diatur di halaman Kelas &amp; Modul." Style="{StaticResource Redup}" FontSize="12" Margin="0,10,0,0" />
+                <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                    <Button Content="Simpan" Command="{Binding SimpanFormCommand}" Style="{DynamicResource AccentButtonStyle}" Margin="0,0,8,0" />
+                    <Button Content="Batal" Command="{Binding BatalFormCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
