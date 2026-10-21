@@ -319,7 +319,7 @@ public class LayananTests : IDisposable
 
         const string csv = """
             nrp,nama,angkatan,email,nama_kelas
-            5025249901,Praktikan Baru,2024,baru@mhs.kampus.ac.id,B
+            5025249901,Praktikan Baru,2024,baru@its.ac.id,B
             502524990,NRP Sembilan Digit,2024,,
             5025241001,NRP Sudah Ada,2024,,
             """;

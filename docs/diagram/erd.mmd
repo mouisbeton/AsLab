@@ -1,0 +1,110 @@
+erDiagram
+    USERS ||--o{ MATA_PRAKTIKUM : "mengampu (dosen)"
+    USERS ||--o{ PENUGASAN_ASISTEN : "ditugaskan"
+    USERS ||--o{ LOG_AKTIVITAS : "melakukan"
+    MATA_PRAKTIKUM ||--o{ KELAS : "memiliki"
+    MATA_PRAKTIKUM ||--o{ MODUL : "memiliki"
+    MATA_PRAKTIKUM ||--o{ KOMPONEN_NILAI : "dinilai dengan"
+    NILAI ||--o{ NILAI_KOMPONEN : "terdiri dari"
+    KOMPONEN_NILAI ||--o{ NILAI_KOMPONEN : "diisi"
+    KELAS ||--o{ PENUGASAN_ASISTEN : "diajar"
+    KELAS ||--o{ PESERTA_KELAS : "berisi"
+    KELAS ||--o{ JADWAL_MODUL : "menjadwalkan"
+    MODUL ||--o{ JADWAL_MODUL : "dijadwalkan"
+    PRAKTIKAN ||--o{ PESERTA_KELAS : "terdaftar"
+    KELAS ||--o{ ABSENSI : "mencatat"
+    MODUL ||--o{ ABSENSI : "dicatat"
+    PRAKTIKAN ||--o{ ABSENSI : "memiliki"
+    KELAS ||--o{ NILAI : "menilai"
+    MODUL ||--o{ NILAI : "dinilai"
+    PRAKTIKAN ||--o{ NILAI : "memiliki"
+
+    USERS {
+        int id PK
+        string username UK
+        string password_hash
+        string nama
+        string role
+    }
+    MATA_PRAKTIKUM {
+        int id PK
+        string kode
+        string nama
+        string semester
+        string tahun_ajaran
+        int dosen_id FK
+    }
+    KOMPONEN_NILAI {
+        int id PK
+        int praktikum_id FK
+        string nama "contoh: Pretest"
+        decimal bobot "persen, total per praktikum = 100"
+        int urutan
+    }
+    KELAS {
+        int id PK
+        int praktikum_id FK
+        string nama_kelas
+        string hari
+        string jam
+        string ruang
+        bool is_locked
+        int dikunci_oleh FK
+        datetime dikunci_pada
+    }
+    MODUL {
+        int id PK
+        int praktikum_id FK
+        int nomor
+        string judul
+    }
+    JADWAL_MODUL {
+        int kelas_id PK, FK
+        int modul_id PK, FK
+        date tanggal
+    }
+    PRAKTIKAN {
+        int id PK
+        string nrp UK
+        string nama
+        int angkatan
+        string email
+    }
+    PESERTA_KELAS {
+        int kelas_id PK, FK
+        int praktikan_id PK, FK
+    }
+    PENUGASAN_ASISTEN {
+        int kelas_id PK, FK
+        int asisten_id PK, FK
+    }
+    ABSENSI {
+        int id PK
+        int modul_id FK
+        int kelas_id FK
+        int praktikan_id FK
+        string status
+        int dicatat_oleh FK
+        datetime waktu
+    }
+    NILAI {
+        int id PK
+        int modul_id FK
+        int kelas_id FK
+        int praktikan_id FK
+        decimal nilai_modul
+        int dinilai_oleh FK
+        datetime updated_at
+    }
+    NILAI_KOMPONEN {
+        int nilai_id PK, FK
+        int komponen_id PK, FK
+        decimal skor "0-100"
+    }
+    LOG_AKTIVITAS {
+        int id PK
+        int user_id FK
+        string aksi
+        string detail
+        datetime waktu
+    }

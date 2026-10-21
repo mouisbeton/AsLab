@@ -28,7 +28,7 @@ public class SkemaTests : IDisposable
         Assert.EndsWith(skrip, isiFile);
     }
 
-    private static string CariFolderProyek()
+    public static string CariFolderProyek()
     {
         var folder = new DirectoryInfo(AppContext.BaseDirectory);
         while (folder != null && !File.Exists(Path.Combine(folder.FullName, "AsLab.slnx")))

@@ -82,13 +82,16 @@ public static class ExportService
         workbook.SaveAs(pathFile);
     }
 
-    public static void KePdf(RekapKelas rekap, string pathFile)
+    public static void KePdf(RekapKelas rekap, string pathFile) => BuatDokumenPdf(rekap).GeneratePdf(pathFile);
+
+    /// <summary>Menyusun dokumen PDF rekap (dipakai KePdf dan untuk membuat gambar contoh di docs/).</summary>
+    public static IDocument BuatDokumenPdf(RekapKelas rekap)
     {
         // QuestPDF wajib diberi lisensi sebelum dipakai; Community gratis untuk proyek kuliah.
         QuestPDF.Settings.License = LicenseType.Community;
         var kolom = Kolom(rekap);
 
-        Document.Create(dokumen =>
+        return Document.Create(dokumen =>
         {
             dokumen.Page(halaman =>
             {
@@ -110,9 +113,14 @@ public static class ExportService
                     tabel.ColumnsDefinition(c =>
                     {
                         c.ConstantColumn(24);  // No
-                        c.ConstantColumn(70);  // NRP
-                        c.RelativeColumn(3);   // Nama
-                        for (var i = 0; i < kolom.Count - 3; i++) c.RelativeColumn();
+                        c.ConstantColumn(66);  // NRP
+                        c.RelativeColumn();    // Nama (mengisi sisa lebar)
+                        foreach (var _ in rekap.DaftarModul) c.ConstantColumn(36); // M1, M2, ...
+                        c.ConstantColumn(54);  // Sementara
+                        c.ConstantColumn(54);  // Nilai Akhir
+                        c.ConstantColumn(36);  // Huruf
+                        c.ConstantColumn(56);  // Kehadiran
+                        c.ConstantColumn(100); // Status
                     });
 
                     tabel.Header(h =>
@@ -136,6 +144,6 @@ public static class ExportService
                     t.TotalPages();
                 });
             });
-        }).GeneratePdf(pathFile);
+        });
     }
 }

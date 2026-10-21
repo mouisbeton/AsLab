@@ -58,7 +58,7 @@ public static class PraktikanService
         if (!int.TryParse(input.Angkatan.Trim(), out var angkatan) || angkatan < 2000 || angkatan > DateTime.Today.Year + 1)
             throw new AturanException("Angkatan harus tahun 4 digit, contoh 2024.");
         if (email != "" && !EmailValid(email))
-            throw new AturanException("Format email tidak valid, contoh nama@kampus.ac.id.");
+            throw new AturanException("Format email tidak valid, contoh nama@its.ac.id.");
 
         using var db = Db.Buka();
         if (db.Praktikan.Any(p => p.Nrp == nrp && p.Id != input.Id))

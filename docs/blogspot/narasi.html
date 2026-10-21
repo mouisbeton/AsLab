@@ -1,0 +1,136 @@
+<!--
+  Narasi laporan Blogspot proyek AsLab (PBKK).
+  Tempel isi file ini di Blogger lewat "HTML view". Setiap baris [[GAMBAR ...]] adalah penanda
+  yang harus diganti dengan gambar yang diunggah (lihat docs/blogspot/README.md).
+  Teks dalam tanda {{...}} harus diisi oleh tim sebelum dipublikasikan.
+-->
+
+<p>Pada mata kuliah <b>Pemrograman Berbasis Kerangka Kerja (PBKK)</b>, kelompok kami membangun <b>AsLab — Sistem Informasi Absensi dan Penilaian Praktikum</b>, sebuah aplikasi desktop <i>Rich UI</i> berbasis <b>C# WPF (.NET 10)</b> dengan database <b>SQL Server</b>. AsLab membantu laboratorium mencatat absensi dan nilai praktikum, menghitung nilai akhir secara otomatis, membatasi akses sesuai peran, serta memberi peringatan dini terhadap praktikan yang berisiko tidak lulus.</p>
+
+<p style="text-align:center">[[GAMBAR 03 | docs/screenshots/03-dashboard.png]]</p>
+<p style="text-align:center"><i>Dashboard AsLab: kartu statistik, grafik, praktikan berisiko, dan aktivitas terbaru.</i></p>
+
+<h2>Anggota Kelompok</h2>
+<table border="1" cellpadding="6" style="border-collapse:collapse">
+  <tr><th>No</th><th>Nama</th><th>NRP</th><th>Peran</th></tr>
+  <tr><td>1</td><td>{{NAMA ANGGOTA 1}}</td><td>{{NRP 1}}</td><td>Database, Autentikasi, CRUD Master</td></tr>
+  <tr><td>2</td><td>{{NAMA ANGGOTA 2}}</td><td>{{NRP 2}}</td><td>Absensi, Penilaian &amp; Rekap Nilai</td></tr>
+  <tr><td>3</td><td>{{NAMA ANGGOTA 3}}</td><td>{{NRP 3}}</td><td>UI/UX &amp; Dashboard</td></tr>
+</table>
+
+<h2>Latar Belakang</h2>
+<p>Di banyak laboratorium, absensi dan nilai praktikum masih dicatat di spreadsheet terpisah untuk setiap kelas atau modul. Cara ini menimbulkan beberapa masalah:</p>
+<ul>
+  <li>Data tersebar di banyak file dengan format berbeda, sehingga rekap nilai akhir memakan waktu lama.</li>
+  <li>Rumus bobot nilai diketik manual oleh tiap asisten, sehingga rawan salah hitung dan tidak konsisten antarkelas.</li>
+  <li>Semua orang bisa mengedit seluruh sheet, dan perubahan nilai tidak meninggalkan jejak.</li>
+  <li>Praktikan yang terlalu sering absen baru ketahuan di akhir semester.</li>
+</ul>
+<p>AsLab menyatukan semua data itu dalam satu aplikasi dengan aturan yang sama untuk semua kelas.</p>
+
+<h2>Pengguna dan Hak Akses</h2>
+<table border="1" cellpadding="6" style="border-collapse:collapse">
+  <tr><th>Peran</th><th>Yang dapat dilakukan</th></tr>
+  <tr><td><b>Koordinator Asisten</b></td><td>Mengelola semua data master, akun, penugasan asisten, komponen nilai, finalisasi nilai, backup, dan log aktivitas.</td></tr>
+  <tr><td><b>Asisten Praktikum</b></td><td>Mengisi absensi dan nilai <i>hanya</i> untuk kelas yang ditugaskan kepadanya.</td></tr>
+  <tr><td><b>Dosen Pengampu</b></td><td>Melihat dashboard dan rekap nilai mata praktikum yang diampunya (hanya baca), serta mengekspor laporan.</td></tr>
+</table>
+
+<h2>Fitur Utama</h2>
+
+<h3>1. Login dan Keamanan</h3>
+<p>Setiap pengguna masuk dengan username dan password. Password disimpan sebagai <i>hash</i> BCrypt, bukan teks asli, dan semua query ke database berparameter melalui Entity Framework Core. Bila username atau password salah, aplikasi menampilkan pesan yang jelas.</p>
+<p style="text-align:center">[[GAMBAR 01 | docs/screenshots/01-login.png]]</p>
+<p style="text-align:center">[[GAMBAR 02 | docs/screenshots/02-login-gagal.png]]</p>
+<p style="text-align:center"><i>Halaman login dan pesan saat password salah.</i></p>
+
+<h3>2. Dashboard Real-Time</h3>
+<p>Dashboard menampilkan empat kartu statistik (total praktikan, kelas aktif, modul berjalan, rata-rata kehadiran), grafik batang rata-rata nilai per modul, grafik donat distribusi nilai huruf, daftar praktikan berisiko, dan aktivitas terbaru. Semua angka dihitung langsung dari database, bukan angka statis. Pengguna juga bisa beralih ke tema gelap.</p>
+<p style="text-align:center">[[GAMBAR 04 | docs/screenshots/04-dashboard-gelap.png]]</p>
+<p style="text-align:center"><i>Dashboard dengan tema gelap.</i></p>
+
+<h3>3. Data Praktikan</h3>
+<p>Koordinator dapat menambah, mengubah, dan menghapus data praktikan, mencari berdasarkan NRP atau nama, memfilter berdasarkan kelas, angkatan, dan status risiko, serta mengimpor banyak praktikan sekaligus dari file CSV. Input yang salah langsung ditolak dengan pesan yang menjelaskan cara memperbaikinya, misalnya NRP yang tidak berisi 10 digit angka.</p>
+<p style="text-align:center">[[GAMBAR 05 | docs/screenshots/05-praktikan.png]]</p>
+<p style="text-align:center">[[GAMBAR 06 | docs/screenshots/06-praktikan-validasi.png]]</p>
+<p style="text-align:center"><i>Tabel praktikan dengan pencarian, filter, paging, serta validasi form.</i></p>
+
+<h3>4. Kelas, Modul, dan Penugasan Asisten</h3>
+<p>Halaman Kelas &amp; Modul memakai tampilan <i>master–detail</i>: pilih mata praktikum, lalu kelas, maka daftar peserta dan jadwal tanggal setiap modul di kelas tersebut langsung muncul. Di halaman Asisten &amp; Akun, koordinator membuat akun dan mencentang kelas mana saja yang boleh diakses setiap asisten.</p>
+<p style="text-align:center">[[GAMBAR 07 | docs/screenshots/07-kelas-modul.png]]</p>
+<p style="text-align:center">[[GAMBAR 08 | docs/screenshots/08-asisten-akun.png]]</p>
+<p style="text-align:center"><i>Pengelolaan kelas, modul, peserta, jadwal, akun, dan penugasan asisten.</i></p>
+
+<h3>5. Absensi</h3>
+<p>Asisten memilih kelas dan modul, lalu menandai status Hadir, Izin, Sakit, atau Alpa untuk setiap praktikan. Tersedia tombol "Tandai semua hadir" agar pencatatan cepat. Kehadiran dihitung dengan rumus <b>Hadir ÷ (Hadir + Alpa)</b>, sehingga izin dan sakit tidak menurunkan persentase kehadiran.</p>
+<p style="text-align:center">[[GAMBAR 09 | docs/screenshots/09-absensi.png]]</p>
+<p style="text-align:center"><i>Pencatatan absensi dengan badge status berwarna.</i></p>
+
+<h3>6. Input Nilai dengan Komponen yang Bisa Diatur</h3>
+<p>Setiap mata praktikum memiliki komponen nilai sendiri, misalnya Pretest 20%, Praktik 50%, dan Laporan 30%. Koordinator bisa menambah, mengganti nama, atau mengubah bobot komponen di halaman Pengaturan, dan kolom di halaman Input Nilai menyesuaikan secara otomatis. Nilai modul langsung terhitung saat angka diketik. Bila ada angka di luar 0–100, sel berubah merah dan tidak ada nilai yang disimpan sampai semuanya diperbaiki.</p>
+<p style="text-align:center">[[GAMBAR 10 | docs/screenshots/10-input-nilai.png]]</p>
+<p style="text-align:center">[[GAMBAR 11 | docs/screenshots/11-input-nilai-validasi.png]]</p>
+<p style="text-align:center">[[GAMBAR 15 | docs/screenshots/15-pengaturan.png]]</p>
+<p style="text-align:center"><i>Input nilai, validasi sel merah, dan pengaturan komponen nilai per mata praktikum.</i></p>
+
+<h3>7. Rekap, Finalisasi, dan Export</h3>
+<p>Halaman Rekap Nilai menampilkan nilai setiap modul, nilai sementara, nilai akhir, huruf mutu, kehadiran, dan status kelulusan. Praktikan berisiko diberi tanda ⚠. Di akhir semester, koordinator menekan <b>Finalisasi &amp; Kunci</b>; setelah itu absensi dan nilai kelas tersebut tidak dapat diubah siapa pun sampai kuncinya dibuka. Rekap dapat diekspor ke Excel maupun PDF.</p>
+<p style="text-align:center">[[GAMBAR 12 | docs/screenshots/12-rekap-nilai.png]]</p>
+<p style="text-align:center">[[GAMBAR 13 | docs/screenshots/13-rekap-terkunci.png]]</p>
+<p style="text-align:center">[[GAMBAR 18 | docs/contoh-export/rekap-PSD-kelas-A-halaman1.png]]</p>
+<p style="text-align:center"><i>Rekap nilai saat semester berjalan, setelah difinalisasi, dan hasil export PDF.</i></p>
+
+<h3>8. Detail Praktikan</h3>
+<p>Dengan klik dua kali pada nama praktikan, pengguna melihat profil, ringkasan nilai, grafik progres nilai per modul, dan riwayat absensinya.</p>
+<p style="text-align:center">[[GAMBAR 14 | docs/screenshots/14-detail-praktikan.png]]</p>
+<p style="text-align:center"><i>Detail praktikan beserta grafik progres nilai.</i></p>
+
+<h3>9. Akses Berbasis Peran</h3>
+<p>Menu dan data menyesuaikan siapa yang login. Asisten hanya melihat kelas yang ditugaskan, sedangkan dosen hanya dapat membaca rekap mata praktikum yang diampunya. Pembatasan ini dicek di lapisan service, bukan sekadar disembunyikan dari menu.</p>
+<p style="text-align:center">[[GAMBAR 16 | docs/screenshots/16-dashboard-asisten.png]]</p>
+<p style="text-align:center">[[GAMBAR 17 | docs/screenshots/17-rekap-dosen.png]]</p>
+<p style="text-align:center"><i>Tampilan untuk asisten (hanya Kelas B) dan dosen (hanya baca).</i></p>
+
+<h2>Aturan Perhitungan Nilai</h2>
+<ul>
+  <li><b>Nilai modul</b> = jumlah (skor komponen × bobot komponen) ÷ 100. Contoh: Pretest 80, Praktik 90, Laporan 70 dengan bobot 20/50/30 menghasilkan 82.00.</li>
+  <li><b>Nilai akhir</b> = rata-rata nilai modul dari seluruh modul; modul tanpa nilai dihitung 0.</li>
+  <li><b>Huruf mutu</b>: A ≥ 86, AB ≥ 76, B ≥ 66, BC ≥ 61, C ≥ 56, D ≥ 41, E &lt; 41.</li>
+  <li><b>Status</b>: kehadiran di bawah 75% berarti "Tidak Memenuhi Syarat"; selain itu lulus bila nilai akhir ≥ 56.</li>
+  <li><b>Praktikan berisiko</b>: kehadiran &lt; 75% atau nilai sementara &lt; 56, sehingga bisa ditindaklanjuti sebelum semester berakhir.</li>
+</ul>
+
+<h2>Teknologi dan Arsitektur</h2>
+<table border="1" cellpadding="6" style="border-collapse:collapse">
+  <tr><th>Komponen</th><th>Teknologi</th></tr>
+  <tr><td>Bahasa &amp; UI</td><td>C#, WPF (.NET 10) dengan pola MVVM (CommunityToolkit.Mvvm) dan tema Fluent</td></tr>
+  <tr><td>Database</td><td>SQL Server 2022 Express melalui Entity Framework Core 10 (Migrations)</td></tr>
+  <tr><td>Grafik</td><td>LiveCharts2</td></tr>
+  <tr><td>Export</td><td>ClosedXML (Excel) dan QuestPDF (PDF)</td></tr>
+  <tr><td>Import</td><td>CsvHelper</td></tr>
+  <tr><td>Keamanan</td><td>BCrypt untuk hash password, query berparameter, pembatasan akses per peran</td></tr>
+  <tr><td>Pengujian</td><td>xUnit dengan database SQL Server khusus uji</td></tr>
+</table>
+<p>Kode dibagi dalam lapisan yang jelas: <b>View (XAML) → ViewModel → Service → Entity Framework Core → SQL Server</b>. Semua aturan bisnis dan pengecekan hak akses berada di lapisan service, sehingga mudah diuji dan dikembangkan.</p>
+<p style="text-align:center">[[GAMBAR 19 | docs/diagram/arsitektur.png]]</p>
+<p style="text-align:center"><i>Arsitektur aplikasi AsLab.</i></p>
+
+<h2>Rancangan Database</h2>
+<p>Database terdiri dari 13 tabel, di antaranya <code>users</code>, <code>mata_praktikum</code>, <code>komponen_nilai</code>, <code>kelas</code>, <code>modul</code>, <code>jadwal_modul</code>, <code>praktikan</code>, <code>absensi</code>, <code>nilai</code>, <code>nilai_komponen</code>, dan <code>log_aktivitas</code>. Tabel dibuat otomatis lewat EF Core Migrations saat aplikasi pertama kali dijalankan, dan tersedia juga skrip T-SQL (<code>schema.sql</code>) untuk membuat tabel secara manual di SQL Server Management Studio. Aturan penting dijaga langsung oleh database, misalnya NRP unik berisi 10 digit dan skor harus 0–100.</p>
+<p style="text-align:center">[[GAMBAR 20 | docs/diagram/erd.png]]</p>
+<p style="text-align:center"><i>Entity Relationship Diagram (ERD) AsLab.</i></p>
+
+<h2>Pengujian</h2>
+<p>Seluruh skenario uji di PRD (TC-01 sampai TC-14) dan aturan bisnis diotomatisasi dengan xUnit, misalnya login dengan password salah, NRP ganda, nilai 105, perhitungan nilai 82.00, asisten yang mencoba membuka kelas lain, kelas yang sudah dikunci, export Excel/PDF, dan import CSV. Saat laporan ini ditulis, <b>62 tes lolos</b> pada SQL Server.</p>
+
+<h2>Video Demo</h2>
+<p>{{TEMPEL VIDEO YOUTUBE DI SINI: https://youtu.be/...}}</p>
+
+<h2>Tautan</h2>
+<ul>
+  <li>Source code: {{TAUTAN GITHUB — repo saat ini privat, buat publik dulu atau hapus baris ini}}</li>
+  <li>Product Requirement Document (PRD): {{TAUTAN PRD}}</li>
+</ul>
+
+<h2>Kesimpulan</h2>
+<p>AsLab menggantikan spreadsheet terpisah dengan satu aplikasi yang menghitung nilai secara konsisten, membatasi akses sesuai peran, mencatat setiap perubahan nilai, dan mengunci nilai setelah difinalisasi. Dashboard dan daftar praktikan berisiko membantu koordinator serta dosen menindaklanjuti masalah lebih awal. Pengembangan selanjutnya dapat berupa notifikasi email untuk praktikan berisiko, impor data langsung dari sistem akademik, dan versi web agar praktikan dapat melihat nilainya sendiri.</p>

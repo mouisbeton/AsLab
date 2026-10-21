@@ -69,7 +69,12 @@ src/
 │   └── dashboard/   Halaman Dashboard, Detail Praktikan, Pengaturan
 └── ui/              Jendela utama + sidebar, tema terang/gelap, style bersama, komponen KartuStatistik
 tests/AsLab.Tests/   Tes otomatis (xUnit)
-docs/contoh-import.csv   Contoh file untuk demo Import CSV (3 baris valid, 2 baris sengaja salah)
+docs/
+├── contoh-import.csv    Contoh file untuk demo Import CSV (3 baris valid, 2 baris sengaja salah)
+├── contoh-export/       Contoh hasil export rekap (Excel, PDF, dan gambar halaman PDF)
+├── screenshots/         Screenshot setiap halaman aplikasi (dipakai PRD dan blog)
+├── diagram/             Diagram arsitektur dan ERD (PNG + sumber Mermaid .mmd)
+└── blogspot/            Narasi laporan blog (narasi.html) dan panduan posting (README.md)
 ```
 
 Beberapa hal yang perlu diketahui:

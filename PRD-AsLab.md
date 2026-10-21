@@ -5,8 +5,10 @@
 **Studi Kasus:** Pengelolaan absensi dan nilai praktikum di laboratorium departemen
 **Jenis Aplikasi:** Aplikasi Desktop Rich UI
 **Mata Kuliah:** Pemrograman Berbasis Kerangka Kerja (PBKK)
-**Versi Dokumen:** 1.2
-**Tanggal:** 19 Oktober 2026
+**Versi Dokumen:** 1.3
+**Tanggal:** 21 Oktober 2026
+**Status:** Aplikasi selesai diimplementasi dan lolos 62 tes otomatis (lihat [Bagian 16](#16-status-implementasi))
+**Repositori:** https://github.com/mouisbeton/AsLab
 
 | No | Nama | NRP | Peran |
 |---|---|---|---|
@@ -281,6 +283,10 @@ erDiagram
     }
 ```
 
+Versi gambar ERD (dirender dari kode Mermaid di atas, sumber: `docs/diagram/erd.mmd`):
+
+![ERD AsLab](docs/diagram/erd.png)
+
 ### 9.2 Kamus Data Singkat
 
 | Tabel | Keterangan |
@@ -354,6 +360,31 @@ Kolom **Role** menunjukkan siapa yang dapat membuka halaman. Data yang tampil di
 └─────────────┴─────────────────────────────┴────────────────────────────┘
 ```
 
+### 10.2 Tampilan Aplikasi (Hasil Implementasi)
+
+Seluruh gambar diambil dari aplikasi yang berjalan dengan data contoh (folder `docs/screenshots/`).
+
+| No | Halaman | Yang ditunjukkan | Gambar |
+|---|---|---|---|
+| 1 | Login | Form login (FR-01) | ![](docs/screenshots/01-login.png) |
+| 2 | Login gagal | Pesan error saat password salah (TC-01) | ![](docs/screenshots/02-login-gagal.png) |
+| 3 | Dashboard | 4 kartu statistik, grafik nilai per modul, distribusi huruf, praktikan berisiko, aktivitas terbaru (FR-10) | ![](docs/screenshots/03-dashboard.png) |
+| 4 | Dashboard tema gelap | Tema gelap/terang (FR-17) | ![](docs/screenshots/04-dashboard-gelap.png) |
+| 5 | Data Praktikan | Tabel, pencarian, filter, paging, status risiko, import CSV (FR-03, FR-09, FR-12) | ![](docs/screenshots/05-praktikan.png) |
+| 6 | Validasi form praktikan | NRP harus 10 digit (BR-08, FR-11) | ![](docs/screenshots/06-praktikan-validasi.png) |
+| 7 | Kelas & Modul | Master–detail: mata praktikum → kelas → peserta & jadwal modul (FR-04) | ![](docs/screenshots/07-kelas-modul.png) |
+| 8 | Asisten & Akun | Kelola akun dan penugasan asisten ke kelas (FR-05) | ![](docs/screenshots/08-asisten-akun.png) |
+| 9 | Absensi | Status Hadir/Izin/Sakit/Alpa dengan badge berwarna (FR-06) | ![](docs/screenshots/09-absensi.png) |
+| 10 | Input Nilai | Satu kolom per komponen nilai, nilai modul terhitung otomatis (FR-07) | ![](docs/screenshots/10-input-nilai.png) |
+| 11 | Validasi nilai | Sel tidak valid ditandai merah, tidak ada yang disimpan (TC-03) | ![](docs/screenshots/11-input-nilai-validasi.png) |
+| 12 | Rekap Nilai | Nilai per modul, nilai sementara/akhir, huruf, kehadiran, status (FR-08) | ![](docs/screenshots/12-rekap-nilai.png) |
+| 13 | Rekap terkunci | Kelas difinalisasi di akhir semester: Lulus / Tidak Lulus (FR-14) | ![](docs/screenshots/13-rekap-terkunci.png) |
+| 14 | Detail Praktikan | Profil, grafik progres, riwayat absensi (FR-16) | ![](docs/screenshots/14-detail-praktikan.png) |
+| 15 | Pengaturan | Komponen nilai per mata praktikum, tema, backup, log aktivitas (FR-15, FR-18, FR-19) | ![](docs/screenshots/15-pengaturan.png) |
+| 16 | Dashboard asisten | Menu dan data dibatasi kelas yang ditugaskan (FR-02, BR-11) | ![](docs/screenshots/16-dashboard-asisten.png) |
+| 17 | Rekap dosen | Dosen hanya bisa membaca (BR-11) | ![](docs/screenshots/17-rekap-dosen.png) |
+| 18 | Hasil export PDF | Rekap kelas dalam PDF (FR-13, TC-08) | ![](docs/contoh-export/rekap-PSD-kelas-A-halaman1.png) |
+
 ---
 
 ## 11. Teknologi
@@ -367,7 +398,28 @@ Kolom **Role** menunjukkan siapa yang dapat membuka halaman. Data yang tampil di
 | Grafik | LiveCharts2 (WPF) |
 | Export | ClosedXML (Excel), QuestPDF (PDF) |
 | Import CSV | CsvHelper |
+| Pengujian | xUnit, memakai database SQL Server terpisah (`AsLab_Uji`) |
 | Version Control | Git + GitHub |
+
+### 11.1 Versi Pustaka yang Dipakai
+
+| Pustaka | Versi |
+|---|---|
+| .NET SDK / Target | 10.0 (`net10.0-windows`) |
+| Microsoft.EntityFrameworkCore.SqlServer + Design, dotnet-ef | 10.0.13 |
+| CommunityToolkit.Mvvm | 8.4.2 |
+| LiveChartsCore.SkiaSharpView.WPF | 2.0.5 |
+| ClosedXML | 0.105.1 |
+| QuestPDF | 2026.9.1 (lisensi Community) |
+| CsvHelper | 33.1.0 |
+| BCrypt.Net-Next | 4.2.0 |
+
+### 11.2 Arsitektur
+
+Alur kode selalu **View (XAML) → ViewModel → Service → Entity Framework Core → SQL Server**.
+Aturan bisnis dan pengecekan hak akses hanya ada di lapisan Service, tidak di tampilan.
+
+![Arsitektur AsLab](docs/diagram/arsitektur.png)
 
 ---
 
@@ -466,45 +518,49 @@ Mengubah folder milik anggota lain dilakukan lewat diskusi atau Pull Request yan
 
 ### 13.7 Checklist Progres
 
+Status per 21 Oktober 2026 (tercentang = sudah ada di aplikasi dan lolos tes).
+
 **Anggota 1 — Fondasi & Data Master**
-- [ ] Skrip SQL skema + seed data
-- [ ] Login, hash password, session, menu per role
-- [ ] CRUD praktikan (dengan validasi NRP)
-- [ ] CRUD mata praktikum, kelas, modul, jadwal modul per kelas
-- [ ] CRUD akun & penugasan asisten
-- [ ] Fungsi akses kelas (BR-09, BR-11)
-- [ ] Pencarian & filter
-- [ ] Import CSV
-- [ ] Log aktivitas (setiap perubahan nilai tercatat)
-- [ ] PRD & README final
+- [x] Skrip SQL skema + seed data
+- [x] Login, hash password, session, menu per role
+- [x] CRUD praktikan (dengan validasi NRP)
+- [x] CRUD mata praktikum, kelas, modul, jadwal modul per kelas
+- [x] CRUD akun & penugasan asisten
+- [x] Fungsi akses kelas (BR-09, BR-11)
+- [x] Pencarian & filter
+- [x] Import CSV
+- [x] Log aktivitas (setiap perubahan nilai tercatat)
+- [x] PRD & README final
 
 **Anggota 2 — Absensi & Penilaian**
-- [ ] Service perhitungan nilai & kehadiran + uji hitung
-- [ ] Halaman Absensi
-- [ ] Halaman Input Nilai + validasi 0–100
-- [ ] Halaman Rekap Nilai (nilai akhir, huruf, status)
-- [ ] Terapkan akses kelas di Absensi, Input Nilai, Rekap
-- [ ] Finalisasi, kunci & buka kunci per kelas
-- [ ] Hitung ulang nilai modul saat komponen/bobot berubah
-- [ ] Data & naskah demo
+- [x] Service perhitungan nilai & kehadiran + uji hitung
+- [x] Halaman Absensi
+- [x] Halaman Input Nilai + validasi 0–100
+- [x] Halaman Rekap Nilai (nilai akhir, huruf, status)
+- [x] Terapkan akses kelas di Absensi, Input Nilai, Rekap
+- [x] Finalisasi, kunci & buka kunci per kelas
+- [x] Hitung ulang nilai modul saat komponen/bobot berubah
+- [x] Data demo (data contoh otomatis saat database pertama dibuat)
+- [ ] Naskah demo
 
 **Anggota 3 — UI & Dashboard**
-- [ ] Mockup semua halaman
-- [ ] Main window, sidebar, tema terang/gelap
-- [ ] Komponen bersama (kartu statistik, tabel, dialog)
-- [ ] Dashboard: kartu statistik + 2 grafik
-- [ ] Praktikan berisiko & aktivitas terbaru
-- [ ] Halaman Detail Praktikan
-- [ ] Cakupan data per role di Dashboard & Detail Praktikan
-- [ ] Halaman Pengaturan (komponen nilai, backup database)
+- [x] Mockup semua halaman (diganti screenshot hasil implementasi, Bagian 10.2)
+- [x] Main window, sidebar, tema terang/gelap
+- [x] Komponen bersama (kartu statistik, tabel, dialog)
+- [x] Dashboard: kartu statistik + 2 grafik
+- [x] Praktikan berisiko & aktivitas terbaru
+- [x] Halaman Detail Praktikan
+- [x] Cakupan data per role di Dashboard & Detail Praktikan
+- [x] Halaman Pengaturan (komponen nilai, backup database)
 
 **Bersama — Seluruh Anggota**
-- [ ] Kesepakatan skema DB & kontrak integrasi
-- [ ] Format laporan Excel/PDF disepakati
-- [ ] Export Excel/PDF berfungsi & lolos TC-08
+- [x] Kesepakatan skema DB & kontrak integrasi
+- [x] Format laporan Excel/PDF disepakati
+- [x] Export Excel/PDF berfungsi & lolos TC-08
 - [ ] Naskah video demo
 - [ ] Rekaman segmen masing-masing anggota
 - [ ] Penyuntingan & pengecekan akhir video
+- [ ] Posting laporan ke Blogspot (bahan siap di `docs/blogspot/`)
 
 ---
 
@@ -527,6 +583,10 @@ Mengubah folder milik anggota lain dilakukan lewat diskusi atau Pull Request yan
 | TC-13 | Import CSV berisi 1 baris NRP 9 digit dan 1 baris NRP duplikat | Baris valid terimpor; ringkasan menampilkan 2 baris gagal beserta nomor baris dan alasannya |
 | TC-14 | Koordinator mengganti komponen mata praktikum baru menjadi Kuis 10, Tugas 20, Demo 30, Laporan 40, lalu asisten mengisi 100/80/60/90 | Input Nilai menampilkan 4 kolom; nilai modul = 80.00. Menambah atau menghapus komponen setelah ada nilai ditolak |
 
+**Hasil:** TC-01 sampai TC-14 diotomatisasi di `tests/AsLab.Tests` (xUnit) bersama uji aturan bisnis BR-01 sampai BR-14.
+Per 21 Oktober 2026, **62 tes lolos** dengan perintah `dotnet test` pada SQL Server 2022 Express (database uji `AsLab_Uji`).
+Tampilan setiap skenario juga diperiksa lewat screenshot di Bagian 10.2, misalnya TC-01 (gambar 2) dan TC-03 (gambar 11).
+
 ---
 
 ## 15. Alur Video Demo (5–7 menit)
@@ -543,3 +603,38 @@ Video dikerjakan bersama: naskah dan penyuntingan dilakukan oleh seluruh anggota
 | 6 | Finalisasi | Koordinator mengunci nilai → export rekap ke Excel/PDF | Anggota 2 |
 | 7 | Dosen | Login read-only, melihat grafik per modul | Anggota 3 |
 | 8 | Penutup | Ringkasan fitur dan pengembangan selanjutnya | Anggota 3 |
+
+---
+
+## 16. Status Implementasi
+
+Per 21 Oktober 2026 seluruh kebutuhan fungsional sudah diimplementasi di repositori
+[mouisbeton/AsLab](https://github.com/mouisbeton/AsLab).
+
+| ID | Fitur | Status | Lokasi utama di kode |
+|---|---|---|---|
+| FR-01 | Login & Logout | Selesai | `src/auth/LoginWindow.xaml`, `AuthService.cs` |
+| FR-02 | Role-Based Access | Selesai | `src/ui/MainViewModel.cs` (menu), `src/auth/AksesKelas.cs` (data) |
+| FR-03 | CRUD Praktikan | Selesai | `src/views/master/Praktikan*`, `services/master/PraktikanService.cs` |
+| FR-04 | CRUD Mata Praktikum, Kelas, Modul | Selesai | `src/views/master/KelasModul*`, `PraktikumService.cs`, `KelasService.cs` |
+| FR-05 | Kelola Akun & Penugasan Asisten | Selesai | `src/views/master/Akun*`, `AkunService.cs` |
+| FR-06 | Input Absensi | Selesai | `src/views/akademik/Absensi*`, `services/penilaian/AbsensiService.cs` |
+| FR-07 | Input Nilai | Selesai | `src/views/akademik/InputNilai*`, `NilaiService.cs` |
+| FR-08 | Rekap Nilai Akhir | Selesai | `src/views/akademik/Rekap*`, `RekapService.cs` |
+| FR-09 | Pencarian & Filter | Selesai | `PraktikanViewModel.cs` |
+| FR-10 | Dashboard | Selesai | `src/views/dashboard/Dashboard*`, `DashboardService.cs` |
+| FR-11 | Validasi Input | Selesai | `Perhitungan.cs`, setiap service (`AturanException`) |
+| FR-12 | Import CSV | Selesai | `ImportCsvService.cs`, contoh file `docs/contoh-import.csv` |
+| FR-13 | Export Excel/PDF | Selesai | `services/laporan/ExportService.cs`, contoh hasil `docs/contoh-export/` |
+| FR-14 | Finalisasi, Kunci & Buka Kunci | Selesai | `KunciService.cs` |
+| FR-15 | Log Aktivitas | Selesai | `LogService.cs` (tampil di Dashboard dan Pengaturan) |
+| FR-16 | Detail Praktikan | Selesai | `src/views/dashboard/DetailPraktikan*` |
+| FR-17 | Tema Gelap/Terang | Selesai | `src/ui/Tema/` |
+| FR-18 | Backup Database | Selesai | `PengaturanService.Backup` (file `.bak`) |
+| FR-19 | Pengaturan Komponen Nilai | Selesai | `PengaturanService.SimpanKomponen`, halaman Pengaturan |
+
+**Catatan dan keterbatasan yang diketahui:**
+- Pengujian otomatis mencakup seluruh service dan logika halaman Input Nilai. Alur klik pada antarmuka (dialog simpan/buka file, konfirmasi) diperiksa lewat screenshot dan perlu dicoba manual sekali sebelum rekaman video demo.
+- Tabel Rekap Nilai dapat digeser horizontal bila jumlah modul banyak; jendela utama terbuka maximized.
+- File backup `.bak` ditulis oleh service SQL Server, sehingga harus disimpan di folder yang bisa diakses service tersebut (misalnya `C:\Users\Public\Documents`).
+- Nama dan NRP anggota tim pada tabel di awal dokumen masih perlu diisi.

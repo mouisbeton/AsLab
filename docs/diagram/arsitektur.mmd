@@ -1,0 +1,20 @@
+flowchart LR
+    subgraph Tampilan["Tampilan (WPF, pola MVVM)"]
+        V["View<br/>file .xaml"] --> VM["ViewModel<br/>CommunityToolkit.Mvvm"]
+    end
+    subgraph Logika["Logika (folder services/)"]
+        S["Service<br/>aturan bisnis BR-01 s.d. BR-14"]
+        A["Sesi + AksesKelas<br/>cek peran dan kelas"]
+        P["Perhitungan<br/>nilai modul, nilai akhir, kehadiran"]
+        E["Export<br/>ClosedXML (Excel), QuestPDF (PDF)"]
+    end
+    subgraph Data["Data (folder data/)"]
+        C["Entity Framework Core<br/>AsLabDbContext + Migrations"]
+        DB[("SQL Server 2022 Express<br/>database AsLab")]
+    end
+    VM --> S
+    S --> A
+    S --> P
+    S --> E
+    S --> C
+    C --> DB

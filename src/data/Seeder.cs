@@ -69,7 +69,7 @@ public static class Seeder
             var nrp = (angkatanLama ? "50252310" : "50252410") + (i + 1).ToString("00");
             var praktikan = new Praktikan
             {
-                Nrp = nrp, Nama = NamaPraktikan[i], Angkatan = angkatanLama ? 2023 : 2024, Email = $"{nrp}@mhs.kampus.ac.id",
+                Nrp = nrp, Nama = NamaPraktikan[i], Angkatan = angkatanLama ? 2023 : 2024, Email = $"{nrp}@its.ac.id",
             };
             praktikan.Keanggotaan.Add(new PesertaKelas { Kelas = i < 15 ? kelasA : kelasB });
             daftarPraktikan.Add(praktikan);
